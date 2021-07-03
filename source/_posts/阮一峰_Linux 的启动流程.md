@@ -1,5 +1,6 @@
 ﻿---
 title: Linux 的启动流程
+index_img: http://www.ruanyifeng.com/blogimg/asset/201308/bg2013081701.png
 comment: valine
 date: 2021-06-10 18:00:00
 category: Linux
@@ -41,7 +42,6 @@ tags: Linux
 >     　　System.map-3.2.0-4-amd64
 >     　　vmlinuz-3.2.0-3-amd64
 >     　　vmlinuz-3.2.0-4-amd64
->     　　
 
 **第二步、启动初始化进程**
 
@@ -63,8 +63,7 @@ Linux 预置七种运行级别（0-6）。一般来说，0 是关机，1 是单�
 
 init 进程首先读取文件 /etc/inittab，它是运行级别的设置文件。如果你打开它，可以看到第一行是这样的：
 
->     　　id:2:initdefault:
->     　　
+>     　　　　id:2:initdefault:
 
 initdefault 的值是 2，表明系统启动时的运行级别为 2。如果需要指定其他级别，可以手动修改这个值。
 
@@ -77,7 +76,6 @@ initdefault 的值是 2，表明系统启动时的运行级别为 2。如果需�
 >     　　/etc/rc4.d
 >     　　/etc/rc5.d
 >     　　/etc/rc6.d
->     　　
 
 上面目录名中的"rc"，表示 run command（运行程序），最后的 d 表示 directory（目录）。下面让我们看看 /etc/rc2.d 目录中到底指定了哪些程序。
 
@@ -93,7 +91,6 @@ initdefault 的值是 2，表明系统启动时的运行级别为 2。如果需�
 >     　　S17apache2
 >     　　S18acpid
 >     　　...
->     　　
 
 可以看到，除了第一个文件 README 以外，其他文件名都是"字母 S+两位数字+程序名"的形式。字母 S 表示 Start，也就是启动的意思（启动脚本的运行参数为 start），如果这个位置是字母 K，就代表 Kill（关闭），即如果从其他运行级别切换过来，需要关闭的程序（启动脚本的运行参数为 stop）。后面的两位数字表示处理顺序，数字越小越早处理，所以第一个启动的程序是 motd，然后是 rpcbing、nfs......数字相同时，则按照程序名的字母顺序启动，所以 rsyslog 会先于 sudo 启动。
 
@@ -121,12 +118,10 @@ Linux 的解决办法，就是七个 /etc/rcN.d 目录里列出的程序，都�
 >     　　S17apache2 -> ../init.d/apache2
 >     　　S18acpid -> ../init.d/acpid
 >     　　...
->     　　
 
 这样做的另一个好处，就是如果你要手动关闭或重启某个进程，直接到目录 /etc/init.d 中寻找启动脚本即可。比如，我要重启 Apache 服务器，就运行下面的命令：
 
->     　　$ sudo /etc/init.d/apache2 restart
->     　　
+>     　　　　$ sudo /etc/init.d/apache2 restart
 
 /etc/init.d 这个目录名最后一个字母 d，是 directory 的意思，表示这是一个目录，用来与程序 /etc/init 区分。
 
@@ -165,7 +160,6 @@ Debian 默认的 shell 是[Bash](http://zh.wikipedia.org/wiki/Bash)，它会读�
 >     　　~/.bash_profile
 >     　　~/.bash_login
 >     　　~/.profile
->     　　
 
 需要注意的是，这三个文件只要有一个存在，就不再读入后面的文件了。比如，要是 ~/.bash_profile 存在，就不会再读入后面两个文件了。
 
@@ -190,7 +184,6 @@ non-login shell 的重要性，不仅在于它是用户最常接触的那个 she
 >     　　　　　　. "$HOME/.bashrc"
 >     　　　　fi
 >     　　fi
->     　　
 
 上面代码先判断变量 $BASH_VERSION 是否有值，然后判断主目录下是否存在 .bashrc 文件，如果存在就运行该文件。第三行开头的那个点，是 source 命令的简写形式，表示运行某个文件，写成"source ~/.bashrc"也是可以的。
 
@@ -199,7 +192,6 @@ non-login shell 的重要性，不仅在于它是用户最常接触的那个 she
 >     　　if [ -f ~/.profile ]; then
 >     　　　　. ~/.profile
 >     　　fi
->     　　
 
 这样一来，不管是哪种情况，.bashrc 都会执行，用户的设置可以放心地都写入这个文件了。
 

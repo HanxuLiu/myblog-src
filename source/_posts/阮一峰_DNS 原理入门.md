@@ -1,5 +1,6 @@
 ﻿---
 title: DNS 原理入门
+index_img: http://www.ruanyifeng.com/blogimg/asset/2016/bg2016061513.png
 comment: valine
 date: 2021-06-10 18:00:00
 category: 计算机网络
